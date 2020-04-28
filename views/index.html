@@ -1,0 +1,153 @@
+<html>
+    <head>
+        <title>Shape Battles: The Final Frontier</title>
+        <style>
+            body { margin: 0; }
+            canvas { width: 100%; height: 100% }
+            #info {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                z-index: 100;
+                display: block;
+                color: white;
+                background: rgba(0, 0, 0, 0.75);
+                font-family: "Courier New";
+                font-size: 20px;
+            }
+            #score {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                text-align: right;
+                z-index: 100;
+                color: white;
+                font-size: 64px;
+                font-family: "Courier New";
+            }
+            #multiplier {
+                position: absolute;
+                top: 80px;
+                right: 10px;
+                text-align: right;
+                z-index: 100;
+                color: white;
+                font-size: 20px;
+                font-family: "Courier New";
+            }
+            #player-name {
+                display: inline-block;
+            }
+            #leaderboard {
+                font-size: 10px;
+            }
+            table {
+                color: white;
+                margin: 0 auto;
+            }
+            th.playerName {
+                text-align: left;
+            }
+            th.playerScore {
+                padding: 0 0 0 20px;
+                text-align: right;
+            }
+
+            /* from: https://rainbowcoding.com/2011/12/02/how-to-create-rainbow-text-in-html-css-javascript */
+            .rainbow {
+                background-image: -webkit-gradient( linear, left top, right top, color-stop(0, #f22), color-stop(0.15, #f2f), color-stop(0.3, #22f), color-stop(0.45, #2ff), color-stop(0.6, #2f2),color-stop(0.75, #2f2), color-stop(0.9, #ff2), color-stop(1, #f22) );
+                background-image: gradient( linear, left top, right top, color-stop(0, #f22), color-stop(0.15, #f2f), color-stop(0.3, #22f), color-stop(0.45, #2ff), color-stop(0.6, #2f2),color-stop(0.75, #2f2), color-stop(0.9, #ff2), color-stop(1, #f22) );
+              color:transparent !important;
+              -webkit-background-clip: text;
+              background-clip: text;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="info">
+            <h2 id="info-text"></h2>
+            <p id="more-info-text"></p>
+            <div id="player-name"></div>
+            <h2>Leaderboard</h2>
+            <div id="leaderboard"></div>
+        </div>
+        <div id="score"></div>
+        <div id="multiplier"></div>
+
+        <!-- Shaders -->
+        <script type="x-shader/x-vertex" id="vertexshader">
+            // read only
+            uniform float time;
+
+            // read only
+            attribute float startTime;
+            attribute vec3 positionStart;
+            attribute vec3 velocity;
+           // attribute vec3 color;
+
+            // can write in vertex shader, but not in fragment shader
+            // for interpolated data between vertex and fragment shaders
+            varying vec3 vColor;
+            varying float lifeLeft;
+
+            void main() {
+                
+                float lifeTime = 0.05;
+                float timeElapsed = time - startTime;
+                lifeLeft = 1.0 - (timeElapsed/lifeTime);
+
+                if (lifeLeft < 0.0) {
+                    lifeLeft = 0.0;
+                }
+
+                if (startTime == 0.0) {
+                    lifeLeft = 0.0;
+                }
+
+                vec3 newPosition = positionStart + velocity * timeElapsed;
+
+                vColor = vec3(1.0,1.0,0.5);
+
+                gl_PointSize = 30.0 * lifeLeft; // * scale;
+
+                vec4 mvPosition = modelViewMatrix * vec4( newPosition, 1.0 );
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        </script>
+
+        <script type="x-shader/x-fragment" id="fragmentshader">
+            uniform sampler2D texture;
+            uniform float lifeTime;
+
+            varying vec3 vColor;
+            varying float lifeLeft;
+
+            void main() {
+                gl_FragColor = vec4(vColor, lifeLeft);
+                gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
+            }
+        </script>
+
+        <!-- Javascript -->
+        <script src="js/three.min.js"></script>
+        <script src="js//BlendShader.js"></script>
+        <script src="js/SAT.min.js"></script>
+        <script src="js/stats.min.js"></script>
+        <script src="js/dat.gui.min.js"></script>
+        <script src="js/CopyShader.js"></script>
+        <script src="js/EffectComposer.js"></script>
+        <script src="js/RenderPass.js"></script>
+        <script src="js/ShaderPass.js"></script>
+        <script src="js/OutlinePass.js"></script>
+        <script src="js/SavePass.js"></script>
+        <script src="js/LuminosityHighPassShader.js"></script>
+        <script src="js/UnrealBloomPass.js"></script>
+        <script src="js/scene.js"></script>
+        <script src="js/particle.js"></script>
+        <script src="js/main.js"></script>
+
+
+
+    </body>
+</html>
