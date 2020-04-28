@@ -6,6 +6,8 @@ Authors: Derek Sawicki, Hector Solis, Jimmy Wu
 
 Live demo: https://shape-battles.herokuapp.com
 
+<img src="images/gameplay.gif" width="640">
+
 ## Running Locally
 
 ```bash
