@@ -4,7 +4,7 @@ Course project for [Princeton COS 426: Computer Graphics, Spring 2019](https://w
 
 Authors: Derek Sawicki, Hector Solis, Jimmy Wu
 
-Live demo: https://shape-battles.herokuapp.com
+Live demo: https://shape-battles.onrender.com
 
 <img src="images/gameplay.gif" width="640">
 
